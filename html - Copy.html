@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FunPuzzles.org.com</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+    }
+    #logo {
+      font-size: 36px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #main, #auth, #signup {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="logo">🧩 FunPuzzles.org.com 🧩</div>
+
+  <div id="auth">
+    <h2>Login</h2>
+    <input id="username" placeholder="Enter your username"><br><br>
+    <input type="password" id="password" placeholder="Enter your password"><br><br>
+    <button onclick="login()">Login</button><br><br>
+    <small>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></small>
+  </div>
+
+  <div id="signup" style="display:none">
+    <h2>Sign Up</h2>
+    <input id="newUsername" placeholder="Create a username"><br><br>
+    <input type="password" id="newPassword" placeholder="Create a password"><br><br>
+    <button onclick="signup()">Sign Up</button><br><br>
+    <small>Already have an account? <a href="#" onclick="showLogin()">Login</a></small>
+  </div>
+
+  <div id="main" style="display:none">
+    <h2 id="welcome"></h2>
+    <h3>Choose a Puzzle</h3>
+    <div id="free-puzzles">
+      <button onclick="startNumberPuzzle()">Number Puzzle</button>
+      <button onclick="startMathQuiz()">Math Quiz</button>
+      <button onclick="startWordScramble()">Word Scramble</button>
+      <button onclick="startQuizSet()">Emoji Quiz</button>
+      <button onclick="startTrivia()">Trivia</button>
+      <button onclick="startMemoryTest()">Memory Test</button>
+      <button onclick="startRiddle()">Riddle</button>
+    </div>
+    <br>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    function showSignup() {
+      document.getElementById("auth").style.display = "none";
+      document.getElementById("signup").style.display = "block";
+    }
+
+    function showLogin() {
+      document.getElementById("signup").style.display = "none";
+      document.getElementById("auth").style.display = "block";
+    }
+
+    function signup() {
+      const username = document.getElementById("newUsername").value.trim();
+      const password = document.getElementById("newPassword").value;
+      if (!username || !password) {
+        alert("Please fill in both fields.");
+        return;
+      }
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      if (users[username]) {
+        alert("Username already exists.");
+        return;
+      }
+      users[username] = password;
+      localStorage.setItem("users", JSON.stringify(users));
+      localStorage.setItem("currentUser", username);
+      document.getElementById("signup").style.display = "none";
+      document.getElementById("main").style.display = "block";
+      document.getElementById("welcome").textContent = `Hi, ${username}!`;
+    }
+
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      if (!username || !password) {
+        alert("Please enter both username and password.");
+        return;
+      }
+      const savedUsers = JSON.parse(localStorage.getItem("users") || "{}");
+      if (savedUsers[username] === password) {
+        localStorage.setItem("currentUser", username);
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("main").style.display = "block";
+        document.getElementById("welcome").textContent = `Hi, ${username}!`;
+      } else {
+        alert("❌ Incorrect username or password.");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("currentUser");
+      location.reload();
+    }
+
+    function startNumberPuzzle() {
+      const target = Math.floor(Math.random() * 100);
+      const guess = prompt("Guess the number between 0-99:");
+      alert(parseInt(guess) === target ? "🎉 Correct!" : `❌ Wrong! It was ${target}`);
+    }
+    function startMathQuiz() {
+      const a = Math.floor(Math.random() * 15);
+      const b = Math.floor(Math.random() * 15);
+      const answer = prompt(`What is ${a} + ${b}?`);
+      alert(parseInt(answer) === a + b ? "🎉 Correct!" : `❌ It's ${a + b}`);
+    }
+    function startWordScramble() {
+      const word = "banana";
+      const scrambled = word.split('').sort(() => 0.5 - Math.random()).join('');
+      const guess = prompt(`Unscramble this word: ${scrambled}`);
+      alert(guess === word ? "🎉 Correct!" : `❌ Wrong! It was ${word}`);
+    }
+    function startQuizSet() {
+      alert("Emoji Quiz Coming Soon");
+    }
+    function startTrivia() {
+      alert("Trivia Coming Soon");
+    }
+    function startMemoryTest() {
+      alert("Memory Test Coming Soon");
+    }
+    function startRiddle() {
+      alert("Riddle Coming Soon");
+    }
+
+    window.onload = function () {
+      const savedUser = localStorage.getItem("currentUser");
+      if (savedUser) {
+        document.getElementById("auth").style.display = "none";
+        document.getEl
